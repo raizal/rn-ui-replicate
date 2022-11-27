@@ -63,12 +63,14 @@ const BookDoctor = () => {
         <Flex tw="px-4 mt-5 mb-2">
           <ReasonInputButton pickedDate={selectedDate} />
         </Flex>
-        <SymptomSection
-          title="Selected symptoms and reasons:"
-          items={selectedSymptom}
-          onSelect={onSelectActiveSymptom}
-          variant="active"
-        />
+        {selectedSymptom && selectedSymptom.length > 0 && (
+          <SymptomSection
+            title="Selected symptoms and reasons:"
+            items={selectedSymptom}
+            onSelect={onSelectActiveSymptom}
+            variant="active"
+          />
+        )}
         <SymptomSection
           title="Choose your symptoms and reasons:"
           items={symptomList.filter(item => selectedSymptom.indexOf(item) < 0)}
