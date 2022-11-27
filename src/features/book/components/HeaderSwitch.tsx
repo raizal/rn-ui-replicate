@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Pressable} from 'react-native';
-import { BodyText, H1, H2, H3 } from "@components/index";
+import {H2} from '@components/index';
 import {styled} from 'nativewind';
 import {View} from 'moti';
 import clsx from 'clsx';

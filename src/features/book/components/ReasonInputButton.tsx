@@ -1,5 +1,5 @@
 import React from 'react';
-import {TouchableOpacity, View} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 import Search from '@icons/Search.svg';
 import Clock from '@icons/Clock.svg';
 import ChevronDown from '@icons/ChevronDown.svg';

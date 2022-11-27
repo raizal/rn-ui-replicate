@@ -18,7 +18,7 @@ const BookDoctor = () => {
   ]);
   const [selectedSymptom, setSelectedSymptom] = useState<string[]>([]);
   const [selectedPatients, setSelectedPatients] = useState<string[]>([]);
-  const [selectedDate, setSelectedDate] = useState<undefined | string>();
+  const [selectedDate] = useState<undefined | string>();
 
   const onSelectSymptom = useCallback(
     (symptom: string) => {
@@ -41,7 +41,7 @@ const BookDoctor = () => {
       const indexPatient = selectedPatients.indexOf(patient);
       if (indexPatient >= 0) {
         setSelectedPatients(
-          selectedPatients.filter((_, index) => index != indexPatient),
+          selectedPatients.filter((_, index) => index !== indexPatient),
         );
       } else {
         setSelectedPatients([...selectedPatients, patient]);

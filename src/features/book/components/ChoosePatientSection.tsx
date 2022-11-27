@@ -4,7 +4,6 @@ import {TouchableOpacity} from 'react-native';
 import Animated, {
   Extrapolation,
   interpolate,
-  interpolateColor,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,

@@ -1,4 +1,4 @@
-import { Flex, H2 } from "@components/index";
+import {Flex, H2} from '@components/index';
 import React from 'react';
 import {styled} from 'nativewind';
 import Stethoscope from '@icons/Stethoscope.svg';

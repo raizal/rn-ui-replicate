@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, TouchableOpacity} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 import {styled} from 'nativewind';
 import Animated, {ZoomOutEasyUp, ZoomInEasyUp} from 'react-native-reanimated';
 import {BodyText} from '@components/index';
