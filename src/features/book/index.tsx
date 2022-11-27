@@ -1,11 +1,11 @@
 import React, {useCallback, useState} from 'react';
 import {SafeAreaView} from 'moti';
-import {BodyText, Flex} from '@components/index';
+import {Flex} from '@components/index';
 import Header from '@components/composition/Header';
 import HeaderSwitch from './components/HeaderSwitch';
-import ButtonTag from '@components/ButtonTag';
 import SymptomSection from '@features/book/components/SymptomSection';
 import ChoosePatientSection from '@features/book/components/ChoosePatientSection';
+import ReasonInputButton from './components/ReasonInputButton';
 
 const BookDoctor = () => {
   const [symptomList] = useState<string[]>([
@@ -18,6 +18,7 @@ const BookDoctor = () => {
   ]);
   const [selectedSymptom, setSelectedSymptom] = useState<string[]>([]);
   const [selectedPatients, setSelectedPatients] = useState<string[]>([]);
+  const [selectedDate, setSelectedDate] = useState<undefined | string>();
 
   const onSelectSymptom = useCallback(
     (symptom: string) => {
@@ -59,6 +60,9 @@ const BookDoctor = () => {
           onSelect={onSelectPatients}
           selected={selectedPatients}
         />
+        <Flex tw="px-4 mt-5 mb-2">
+          <ReasonInputButton pickedDate={selectedDate} />
+        </Flex>
         <SymptomSection
           title="Selected symptoms and reasons:"
           items={selectedSymptom}
