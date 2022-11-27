@@ -1,0 +1,27 @@
+// prettier-ignore
+{
+  "extends": "@tsconfig/react-native/tsconfig.json",
+  /* Recommended React Native TSConfig base */
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noImplicitThis": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "preserveConstEnums": true,
+    "forceConsistentCasingInFileNames": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "importHelpers": true,
+    "paths": {
+      "@src/*": ["src/*"],
+      "@components/*": ["src/common/components/*"],
+      "@icons/*": ["src/common/icons/*"],
+      "@hooks/*": ["src/common/hooks/*"],
+      "@features/*": ["src/features/*"],
+      "@themes/*": ["src/themes/*"]
+    },
+    "typeRoots": ["./types"]
+  }
+}
