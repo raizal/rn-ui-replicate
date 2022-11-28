@@ -58,11 +58,14 @@
   "jest": {
     "preset": "react-native",
     "setupFiles": [
-      "<rootDir>/jest/setup.js"
+      "<rootDir>/__mocks__/setup.js"
     ],
     "moduleNameMapper": {
       "\\.svg": "<rootDir>/__mocks__/svgMock.js"
     },
+    "testMatch": [
+      "**/?(*.)+(spec|test).[jt]s?(x)"
+    ],
     "moduleFileExtensions": [
       "ts",
       "tsx",
