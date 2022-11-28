@@ -1,6 +1,6 @@
 import React, {useCallback, useRef, useState} from 'react';
 import {Flex} from '@components/index';
-import Header from '@components/composition/Header';
+import Header from '@components/Header';
 import HeaderSwitch from './components/HeaderSwitch';
 import SymptomSection from '@features/book/components/SymptomSection';
 import ChoosePatientSection from '@features/book/components/ChoosePatientSection';
@@ -11,12 +11,14 @@ import {ScrollView as RNScrollView} from 'react-native';
 import {styled} from 'nativewind';
 import {useBackHandler} from '@react-native-community/hooks';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import AppointmentDialog from './components/AppointmentDialog';
 
 const ScrollView = styled(RNScrollView, 'bg-white h-full');
 const Container = styled(SafeAreaView, 'flex-1 grow');
 
 const BookDoctor = () => {
   const symptomDialog = useRef<BottomSheet>(null);
+  const appointmentDialog = useRef<BottomSheet>(null);
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [symptomList] = useState<string[]>([
@@ -29,7 +31,7 @@ const BookDoctor = () => {
   ]);
   const [selectedSymptom, setSelectedSymptom] = useState<string[]>([]);
   const [selectedPatients, setSelectedPatients] = useState<string[]>([]);
-  const [selectedDate] = useState<undefined | string>();
+  const [selectedDate, setSelectedDate] = useState<undefined | string>();
 
   useBackHandler(() => {
     if (dialogOpen) {
@@ -73,9 +75,18 @@ const BookDoctor = () => {
     symptomDialog?.current?.expand();
   }, []);
 
+  const showAppointmentDialog = useCallback(() => {
+    appointmentDialog?.current?.expand();
+  }, []);
+
   const onSubmitSymptomDialog = useCallback((selected: string[]) => {
     setSelectedSymptom(selected);
-    symptomDialog?.current?.close();
+    symptomDialog.current?.close();
+  }, []);
+
+  const onSubmitAppointment = useCallback((formattedResult: string) => {
+    setSelectedDate(formattedResult);
+    appointmentDialog.current?.close();
   }, []);
 
   return (
@@ -92,6 +103,7 @@ const BookDoctor = () => {
           <Flex tw="px-4 mt-5 mb-2">
             <ReasonInputButton
               onInputClick={showSymptomDialog}
+              onDateClick={showAppointmentDialog}
               pickedDate={selectedDate}
             />
           </Flex>
@@ -120,6 +132,13 @@ const BookDoctor = () => {
           setDialogOpen(index >= 0);
         }}
         onSubmit={onSubmitSymptomDialog}
+      />
+      <AppointmentDialog
+        ref={appointmentDialog}
+        onChange={index => {
+          setDialogOpen(index >= 0);
+        }}
+        onSubmit={onSubmitAppointment}
       />
     </Container>
   );
