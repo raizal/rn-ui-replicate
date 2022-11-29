@@ -6,6 +6,8 @@ import ChevronDown from '@icons/ChevronDown.svg';
 import {BodyText, Flex} from '@components/index';
 import {styled} from 'nativewind';
 import clsx from 'clsx';
+import {useBookAppointment} from '@features/book/stores';
+import {formatDateForResult} from '@features/book/components/utils';
 
 const Container = styled(
   Flex,
@@ -41,11 +43,19 @@ interface ReasonInputButtonProps {
 }
 
 const ReasonInputButton = ({
-  pickedDate,
   className,
   onInputClick,
   onDateClick,
 }: ReasonInputButtonProps) => {
+  const pickedDate = useBookAppointment(state => state.appointmentDate);
+  const pickedTime = useBookAppointment(state => state.appointmentTime);
+
+  const pickedDateTime = pickedDate
+    ? `${formatDateForResult(pickedDate)} ${
+        pickedDate && pickedTime !== 'Now' ? pickedTime : ''
+      }`
+    : null;
+
   return (
     <Container
       tw={clsx(className)}
@@ -59,7 +69,9 @@ const ReasonInputButton = ({
       <ButtonDatePicker onPress={onDateClick} activeOpacity={0.85}>
         <DatePickerContainer tw={clsx(pickedDate && 'bg-brand-success-500')}>
           <ClockIcon width={18} height={18} />
-          <DatePickerText>{pickedDate ? pickedDate : 'Now'}</DatePickerText>
+          <DatePickerText>
+            {pickedDateTime ? pickedDateTime : 'Now'}
+          </DatePickerText>
           <ChevronDownIcon width={18} height={18} />
         </DatePickerContainer>
       </ButtonDatePicker>

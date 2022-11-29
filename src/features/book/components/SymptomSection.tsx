@@ -4,25 +4,33 @@ import ButtonTag from '@components/ButtonTag';
 import clsx from 'clsx';
 import Animated, {ZoomInEasyUp, ZoomOutEasyUp} from 'react-native-reanimated';
 import {styled} from 'nativewind';
+import {useBookAppointment} from '@features/book/stores';
 
 const Container = styled(Animated.View, 'flex flex-col');
 
 interface SymptomSectionProps {
   title: string;
-  items: string[];
-  onSelect: (selected: string) => void;
   classNames?: string;
   variant?: 'active' | 'inactive';
 }
 
 const SymptomSection = ({
-  items,
   title,
-  onSelect,
   classNames,
   variant = 'inactive',
 }: SymptomSectionProps) => {
-  return (
+  const items = useBookAppointment(state => {
+    if (variant === 'active') {
+      return state.selectedSymptoms;
+    }
+    return state.symptoms.filter(
+      symptom => state.selectedSymptoms.indexOf(symptom) < 0,
+    );
+  });
+  const onSelect = useBookAppointment(
+    state => state.addOrRemoveSelectedSymptom,
+  );
+  return items.length > 0 ? (
     <Container
       exiting={ZoomOutEasyUp.duration(100)}
       entering={ZoomInEasyUp.duration(100)}
@@ -41,7 +49,7 @@ const SymptomSection = ({
         ))}
       </Flex>
     </Container>
-  );
+  ) : null;
 };
 
 export default SymptomSection;

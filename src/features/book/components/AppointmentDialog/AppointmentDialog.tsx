@@ -10,13 +10,13 @@ import {styled} from 'nativewind';
 import {BottomSheetDefaultFooterProps} from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetFooter/types';
 import {
   formatDateForPicker,
-  formatDateForResult,
   generateRangeOfDates,
   getDateFromPickerFormat,
   timeRanges,
-} from '@features/book/components/AppointmentDialog/utils';
+} from '@features/book/components/utils';
 import ScrollPicker from '@components/ScrollPicker';
 import clsx from 'clsx';
+import {useBookAppointment} from '@features/book/stores';
 
 const FooterButton = styled(
   TouchableOpacity,
@@ -30,15 +30,22 @@ const ContentContainer = styled(
 
 interface AppointmentDialogProps {
   onChange?: (index: number) => void;
-  onSubmit?: (formattedResult: string, date: Date, time: string) => void;
+  onSubmit?: () => void;
 }
 
 const AppointmentDialog = React.forwardRef<BottomSheet, AppointmentDialogProps>(
   ({onChange, onSubmit}, ref) => {
     const initialSnapPoints = useMemo(() => ['65%', '65%'], []);
 
-    const [selectedDate, setSelectedDate] = React.useState<Date>();
-    const [selectedTimeStr, setSelectedTime] = React.useState<string>();
+    const [selectedDate, setSelectedDate] = React.useState<Date>(new Date());
+    const [selectedTimeStr, setSelectedTime] = React.useState<string>('Now');
+
+    const setAppointmentDate = useBookAppointment(
+      state => state.setAppointmentDate,
+    );
+    const setAppointmentTime = useBookAppointment(
+      state => state.setAppointmentTime,
+    );
 
     const dates = useMemo(
       () => generateRangeOfDates(30).map(day => formatDateForPicker(day)),
@@ -47,14 +54,18 @@ const AppointmentDialog = React.forwardRef<BottomSheet, AppointmentDialogProps>(
     const times = useMemo(timeRanges, []);
 
     const handleDialogSubmit = useCallback(() => {
-      if (selectedDate && onSubmit) {
-        onSubmit(
-          `${formatDateForResult(selectedDate)} ${selectedTimeStr}`,
-          selectedDate,
-          selectedTimeStr || 'Now',
-        );
+      if (selectedDate) {
+        setAppointmentDate(selectedDate);
+        setAppointmentTime(selectedTimeStr);
+        onSubmit && onSubmit();
       }
-    }, [onSubmit, selectedDate, selectedTimeStr]);
+    }, [
+      onSubmit,
+      selectedDate,
+      selectedTimeStr,
+      setAppointmentDate,
+      setAppointmentTime,
+    ]);
 
     const handleChangeDate = (value: string) => {
       const date = getDateFromPickerFormat(value);

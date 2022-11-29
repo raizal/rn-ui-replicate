@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
@@ -11,6 +11,7 @@ import {BodyText, Flex, H1, H2} from '@components/index';
 import {styled} from 'nativewind';
 import {BottomSheetDefaultFooterProps} from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetFooter/types';
 import SymptomSection from '@features/book/components/SymptomSection';
+import {useBookAppointment} from '@features/book/stores';
 
 const FooterButton = styled(
   TouchableOpacity,
@@ -28,43 +29,30 @@ const TextInput = styled(
 );
 
 interface SymptompDialogProps {
-  selectedSymptom: string[];
-  symptomList: string[];
   onChange?: (index: number) => void;
   onSubmit?: (selected: string[]) => void;
 }
 
 const SymptomDialog = React.forwardRef<BottomSheet, SymptompDialogProps>(
-  ({selectedSymptom = [], symptomList = [], onChange, onSubmit}, ref) => {
-    const [inputText, setInputText] = useState('');
-    const [selected, setSelected] = useState<string[]>(selectedSymptom);
+  ({onChange, onSubmit}, ref) => {
+    const onSelect = useBookAppointment(
+      state => state.addOrRemoveSelectedSymptom,
+    );
 
-    const initialSnapPoints = useMemo(() => ['65%', '65%'], []);
+    const [inputText, setInputText] = useState('');
+
+    const initialSnapPoints = useMemo(() => ['75%', '75%'], []);
 
     const onInputSubmit = useCallback(() => {
-      setSelected([...selected, inputText]);
+      onSelect(inputText);
       setInputText('');
-    }, [inputText, selected]);
+    }, [inputText, onSelect]);
 
     const onClose = useCallback(() => {
       setInputText('');
       Keyboard.dismiss();
       onChange && onChange(-1);
     }, [onChange]);
-
-    const onSelectSymptom = useCallback(
-      (symptom: string) => {
-        setSelected([...selected, symptom]);
-      },
-      [selected],
-    );
-
-    const onSelectActiveSymptom = useCallback(
-      (symptom: string) => {
-        setSelected([...selected.filter(active => active !== symptom)]);
-      },
-      [selected],
-    );
 
     const renderBackdrop = useCallback(
       (backdropProps: BottomSheetBackdropProps) => (
@@ -79,7 +67,7 @@ const SymptomDialog = React.forwardRef<BottomSheet, SymptompDialogProps>(
           <BottomSheetFooter {...props} bottomInset={24}>
             <Flex tw="px-4">
               <FooterButton
-                onPress={() => onSubmit && onSubmit(selected)}
+                onPress={() => onSubmit && onSubmit([])}
                 activeOpacity={0.9}
                 style={{
                   elevation: 4,
@@ -90,12 +78,8 @@ const SymptomDialog = React.forwardRef<BottomSheet, SymptompDialogProps>(
           </BottomSheetFooter>
         );
       },
-      [onSubmit, selected],
+      [onSubmit],
     );
-
-    useEffect(() => {
-      setSelected(selectedSymptom);
-    }, [selectedSymptom]);
 
     return (
       <BottomSheet
@@ -112,7 +96,7 @@ const SymptomDialog = React.forwardRef<BottomSheet, SymptompDialogProps>(
         keyboardBlurBehavior="restore"
         android_keyboardInputMode="adjustResize">
         <BottomSheetScrollView>
-          <ContentContainer tw="pb-[45px]">
+          <ContentContainer tw="pb-[72px]">
             <Flex tw="px-4">
               <H1>Symptoms & Conditions</H1>
               <BodyText>Please specify your symptoms:</BodyText>
@@ -125,19 +109,11 @@ const SymptomDialog = React.forwardRef<BottomSheet, SymptompDialogProps>(
                 placeholder="e.g. Cough"
               />
             </Flex>
-            {selected && selected.length > 0 && (
-              <SymptomSection
-                title="Selected symptoms and reasons:"
-                items={selected}
-                onSelect={onSelectActiveSymptom}
-                variant="active"
-              />
-            )}
             <SymptomSection
-              title="Choose your symptoms and reasons:"
-              items={symptomList.filter(item => selected.indexOf(item) < 0)}
-              onSelect={onSelectSymptom}
+              title="Selected symptoms and reasons:"
+              variant="active"
             />
+            <SymptomSection title="Choose your symptoms and reasons:" />
           </ContentContainer>
         </BottomSheetScrollView>
       </BottomSheet>

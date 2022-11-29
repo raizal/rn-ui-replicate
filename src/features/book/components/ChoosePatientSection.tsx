@@ -13,13 +13,7 @@ import clsx from 'clsx';
 import Button from '@components/Button';
 import {styled} from 'nativewind';
 import Plus from '@icons/Plus.svg';
-
-interface SymptomSectionProps {
-  items: string[];
-  selected?: string[];
-  onSelect: (selected: string) => void;
-  classNames?: string;
-}
+import {useBookAppointment} from '@features/book/stores';
 
 const Touchable = styled(
   TouchableOpacity,
@@ -32,7 +26,7 @@ const DashedContainer = styled(
 
 const ButtonContainer = styled(
   Animated.View,
-  'w-[120px] bg-white overflow-hidden',
+  'w-[100px] bg-white overflow-hidden',
 );
 
 const List = styled(Animated.FlatList<string>);
@@ -49,12 +43,17 @@ const PlusIcon = styled(Plus, 'fill-neutral-300');
 
 const SCROLL_RANGE = 60;
 
-const SymptomSection = ({
-  items,
-  selected = [],
-  onSelect,
-  classNames,
-}: SymptomSectionProps) => {
+interface SymptomSectionProps {
+  classNames?: string;
+}
+
+const SymptomSection = ({classNames}: SymptomSectionProps) => {
+  const patients = useBookAppointment(state => state.patients);
+  const selectedPatients = useBookAppointment(state => state.selectedPatients);
+  const onSelect = useBookAppointment(
+    state => state.addOrRemoveSelectedPatient,
+  );
+
   const prevX = useSharedValue(0);
   const scrollX = useSharedValue(0);
 
@@ -143,7 +142,7 @@ const SymptomSection = ({
       <BodyText tw="ml-4 mt-4 mb-2 tracking-wide text-neutral-500 text-[16px]">
         Choose Patient:
       </BodyText>
-      <Flex tw="py-1">
+      <Flex tw="py-1 min-h-[69px]">
         <List
           tw={'flex-wrap flex-row pr-4 pl-2'}
           onScroll={scrollHandler}
@@ -153,7 +152,7 @@ const SymptomSection = ({
           renderItem={({item}) => (
             <Button
               text={item}
-              active={selected?.indexOf(item) >= 0}
+              active={selectedPatients?.indexOf(item) >= 0}
               onPress={() => onSelect(item)}
             />
           )}
@@ -162,7 +161,7 @@ const SymptomSection = ({
             paddingRight: 32,
             paddingLeft: 112,
           }}
-          data={items}
+          data={patients}
         />
         <DashedContainer style={[styles.dashed, animatedBorderRadiusStyle]}>
           <ButtonContainer

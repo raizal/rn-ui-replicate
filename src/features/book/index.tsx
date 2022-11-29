@@ -1,4 +1,4 @@
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Flex, H1} from '@components/index';
 import Header from '@components/Header';
 import HeaderSwitch from './components/HeaderSwitch';
@@ -12,6 +12,7 @@ import {styled} from 'nativewind';
 import {useBackHandler} from '@react-native-community/hooks';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import AppointmentDialog from './components/AppointmentDialog';
+import {useBookAppointment} from './stores';
 
 const ScrollView = styled(RNScrollView, 'bg-white h-full');
 const Container = styled(SafeAreaView, 'flex-1 grow bg-white');
@@ -25,17 +26,14 @@ const BookDoctor = () => {
   const appointmentDialog = useRef<BottomSheet>(null);
 
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [symptomList] = useState<string[]>([
-    'sympt1',
-    'symptom2',
-    'sy3',
-    'symptom4',
-    'symp5',
-    'symptom6',
-  ]);
-  const [selectedSymptom, setSelectedSymptom] = useState<string[]>([]);
-  const [selectedPatients, setSelectedPatients] = useState<string[]>([]);
-  const [selectedDate, setSelectedDate] = useState<undefined | string>();
+
+  const fetchSymptoms = useBookAppointment(state => state.fetchSymptoms);
+  const fetchPatients = useBookAppointment(state => state.fetchPatients);
+
+  useEffect(() => {
+    fetchSymptoms();
+    fetchPatients();
+  });
 
   useBackHandler(() => {
     if (dialogOpen) {
@@ -45,36 +43,6 @@ const BookDoctor = () => {
     return false;
   });
 
-  const onSelectPatients = useCallback(
-    (patient: string) => {
-      const indexPatient = selectedPatients.indexOf(patient);
-      if (indexPatient >= 0) {
-        setSelectedPatients(
-          selectedPatients.filter((_, index) => index !== indexPatient),
-        );
-      } else {
-        setSelectedPatients([...selectedPatients, patient]);
-      }
-    },
-    [selectedPatients],
-  );
-
-  const onSelectSymptom = useCallback(
-    (symptom: string) => {
-      setSelectedSymptom([...selectedSymptom, symptom]);
-    },
-    [selectedSymptom],
-  );
-
-  const onSelectActiveSymptom = useCallback(
-    (symptom: string) => {
-      setSelectedSymptom([
-        ...selectedSymptom.filter(active => active !== symptom),
-      ]);
-    },
-    [selectedSymptom],
-  );
-
   const showSymptomDialog = useCallback(() => {
     symptomDialog?.current?.expand();
   }, []);
@@ -83,13 +51,11 @@ const BookDoctor = () => {
     appointmentDialog?.current?.expand();
   }, []);
 
-  const onSubmitSymptomDialog = useCallback((selected: string[]) => {
-    setSelectedSymptom(selected);
+  const onSubmitSymptomDialog = useCallback(() => {
     symptomDialog.current?.close();
   }, []);
 
-  const onSubmitAppointment = useCallback((formattedResult: string) => {
-    setSelectedDate(formattedResult);
+  const onSubmitAppointment = useCallback(() => {
     appointmentDialog.current?.close();
   }, []);
 
@@ -99,33 +65,19 @@ const BookDoctor = () => {
       <ScrollView>
         <Flex>
           <HeaderSwitch />
-          <ChoosePatientSection
-            items={['Rere', 'Testing', 'Edo', 'Raizal Islami N.P.']}
-            onSelect={onSelectPatients}
-            selected={selectedPatients}
-          />
+          <ChoosePatientSection />
           <Flex tw="px-4 mt-5 mb-2">
             <ReasonInputButton
               onInputClick={showSymptomDialog}
               onDateClick={showAppointmentDialog}
-              pickedDate={selectedDate}
+              // pickedDate={selectedDate}
             />
           </Flex>
-          {selectedSymptom && selectedSymptom.length > 0 && (
-            <SymptomSection
-              title="Selected symptoms and reasons:"
-              items={selectedSymptom}
-              onSelect={onSelectActiveSymptom}
-              variant="active"
-            />
-          )}
           <SymptomSection
-            title="Choose your symptoms and reasons:"
-            items={symptomList.filter(
-              item => selectedSymptom.indexOf(item) < 0,
-            )}
-            onSelect={onSelectSymptom}
+            title="Selected symptoms and reasons:"
+            variant="active"
           />
+          <SymptomSection title="Choose your symptoms and reasons:" />
         </Flex>
       </ScrollView>
       <Flex tw="px-4 pb-4">
@@ -140,8 +92,6 @@ const BookDoctor = () => {
       </Flex>
       <SymptomDialog
         ref={symptomDialog}
-        symptomList={symptomList}
-        selectedSymptom={selectedSymptom}
         onChange={index => {
           setDialogOpen(index >= 0);
         }}

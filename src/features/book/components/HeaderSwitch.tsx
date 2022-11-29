@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {Pressable} from 'react-native';
 import {H2} from '@components/index';
 import {styled} from 'nativewind';
-import {View} from 'moti';
 import clsx from 'clsx';
 import Animated, {
   Easing,
@@ -10,10 +9,13 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
+  ZoomInEasyUp,
+  ZoomOutEasyUp,
 } from 'react-native-reanimated';
+import {useBookAppointment} from '@features/book/stores';
 
 const Container = styled(
-  View,
+  Animated.View,
   'flex mx-auto flex-row w-[80%] bg-brand-bg-input rounded-2xl',
 );
 
@@ -28,7 +30,10 @@ const Text = styled(H2, 'text-brand-primary-500');
 
 const HeaderSwitch = () => {
   const position = useSharedValue(0);
+  const setBookType = useBookAppointment(state => state.setBookType);
+
   const [isDoctor, setIsDoctor] = useState(true);
+
   const animatedStyle = useAnimatedStyle(() => {
     return {
       marginLeft: `${interpolate(position.value, [0, 1], [0, 50])}%`,
@@ -41,27 +46,13 @@ const HeaderSwitch = () => {
       easing: Easing.bounce,
     });
     setIsDoctor(active);
+    setTimeout(() => setBookType(active ? 'doctor' : 'video'), 100);
   };
 
   return (
     <Container
-      from={{
-        opacity: 0,
-        scale: 0,
-        translateY: -30,
-      }}
-      animate={{
-        opacity: 1,
-        scale: 1,
-        translateY: 0,
-      }}
-      transition={{
-        type: 'timing',
-        duration: 400,
-        scale: {
-          type: 'spring',
-        },
-      }}
+      exiting={ZoomOutEasyUp.duration(100)}
+      entering={ZoomInEasyUp.duration(100)}
       style={{
         elevation: 5,
       }}>
