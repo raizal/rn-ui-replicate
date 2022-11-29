@@ -1,5 +1,5 @@
 import React, {useCallback, useRef, useState} from 'react';
-import {Flex} from '@components/index';
+import {Flex, H1} from '@components/index';
 import Header from '@components/Header';
 import HeaderSwitch from './components/HeaderSwitch';
 import SymptomSection from '@features/book/components/SymptomSection';
@@ -7,14 +7,18 @@ import ChoosePatientSection from '@features/book/components/ChoosePatientSection
 import ReasonInputButton from './components/ReasonInputButton';
 import SymptomDialog from '@features/book/components/SymptomDialog';
 import BottomSheet from '@gorhom/bottom-sheet';
-import {ScrollView as RNScrollView} from 'react-native';
+import {ScrollView as RNScrollView, TouchableOpacity} from 'react-native';
 import {styled} from 'nativewind';
 import {useBackHandler} from '@react-native-community/hooks';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import AppointmentDialog from './components/AppointmentDialog';
 
 const ScrollView = styled(RNScrollView, 'bg-white h-full');
-const Container = styled(SafeAreaView, 'flex-1 grow');
+const Container = styled(SafeAreaView, 'flex-1 grow bg-white');
+const FooterButton = styled(
+  TouchableOpacity,
+  'flex flex-col bg-white border border-0.5 border-neutral-200 items-center py-4 rounded-2xl',
+);
 
 const BookDoctor = () => {
   const symptomDialog = useRef<BottomSheet>(null);
@@ -124,6 +128,16 @@ const BookDoctor = () => {
           />
         </Flex>
       </ScrollView>
+      <Flex tw="px-4 pb-4">
+        <FooterButton
+          tw="bg-brand-primary-500"
+          activeOpacity={0.65}
+          style={{
+            elevation: 4,
+          }}>
+          <H1 tw="leading-6 text-white">Done</H1>
+        </FooterButton>
+      </Flex>
       <SymptomDialog
         ref={symptomDialog}
         symptomList={symptomList}
