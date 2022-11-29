@@ -5,10 +5,14 @@ import parse from 'date-fns/parse';
 export const generateRangeOfDates = (
   days: number = 60,
   startFrom?: Date,
-): Date[] =>
-  Array(days)
+): Date[] => {
+  if (days < 0) {
+    return [];
+  }
+  return Array(days)
     .fill(startFrom || Date.now())
     .map((start, index) => addDays(start, index));
+};
 
 export const formatDateForPicker = (date: Date): string => {
   return format(date, 'iii-MMM, d y').replace('-', '\n');
