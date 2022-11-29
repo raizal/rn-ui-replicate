@@ -22,11 +22,14 @@
       "@features/*": ["src/features/*"],
       "@themes/*": ["src/themes/*"]
     },
+    "types": ["@types/jest"],
     "typeRoots": ["./types"]
   },
-  "exclude": [
-    "__mocks__/**",
+  "include": [
     "src/**/*.spec.ts",
     "src/**/*.test.ts"
-  ]
+  ],
+  "exclude": [
+    "__mocks__/**",
+  ],
 }
