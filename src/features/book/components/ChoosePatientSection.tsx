@@ -1,6 +1,6 @@
 import React from 'react';
 import {BodyText, Flex} from '@src/common/components';
-import {TouchableOpacity} from 'react-native';
+import {StyleSheet, TouchableOpacity} from 'react-native';
 import Animated, {
   Extrapolation,
   interpolate,
@@ -25,10 +25,16 @@ const Touchable = styled(
   TouchableOpacity,
   'flex items-center w-full h-full justify-center',
 );
+const DashedContainer = styled(
+  Animated.View,
+  'absolute top-[6px] bottom-[6px] left-[16px] overflow-hidden pt-1 pb-1.5 px-1.5',
+);
+
 const ButtonContainer = styled(
   Animated.View,
-  'absolute top-[6px] bottom-[6px] left-[16px] w-[120px] rounded-2xl bg-white overflow-hidden',
+  'w-[120px] bg-white overflow-hidden',
 );
+
 const List = styled(Animated.FlatList<string>);
 const Text = styled(
   Animated.Text,
@@ -40,6 +46,8 @@ const PlusIconContainer = styled(
   'absolute bottom-[-16] left-[-16]',
 );
 const PlusIcon = styled(Plus, 'fill-neutral-300');
+
+const SCROLL_RANGE = 60;
 
 const SymptomSection = ({
   items,
@@ -68,31 +76,44 @@ const SymptomSection = ({
   const animatedStyle = useAnimatedStyle(() => {
     const buttonWidth = interpolate(
       scrollX.value,
-      [0, 70],
+      [0, SCROLL_RANGE],
       [100, 50],
       Extrapolation.CLAMP,
     );
+
     return {
       width: buttonWidth,
+    };
+  });
+
+  const animatedBorderRadiusStyle = useAnimatedStyle(() => {
+    const borderRadius = interpolate(
+      scrollX.value,
+      [0, SCROLL_RANGE],
+      [8, 500],
+      Extrapolation.CLAMP,
+    );
+    return {
+      borderRadius,
     };
   });
 
   const plusIconAnimatedStyle = useAnimatedStyle(() => {
     const bottom = interpolate(
       scrollX.value,
-      [0, 70],
+      [0, SCROLL_RANGE],
       [-16, -6],
       Extrapolation.CLAMP,
     );
     const left = interpolate(
       scrollX.value,
-      [0, 70],
-      [-16, -2],
+      [0, SCROLL_RANGE],
+      [-16, -3],
       Extrapolation.CLAMP,
     );
     const scale = interpolate(
       scrollX.value,
-      [0, 70],
+      [0, SCROLL_RANGE],
       [1, 0.7],
       Extrapolation.CLAMP,
     );
@@ -108,7 +129,7 @@ const SymptomSection = ({
   const textOpacity = useAnimatedStyle(() => {
     const opacity = interpolate(
       scrollX.value,
-      [0, 70],
+      [0, SCROLL_RANGE],
       [1, 0],
       Extrapolation.CLAMP,
     );
@@ -122,9 +143,9 @@ const SymptomSection = ({
       <BodyText tw="ml-4 mt-4 mb-2 tracking-wide text-neutral-500 text-[16px]">
         Choose Patient:
       </BodyText>
-      <Flex>
+      <Flex tw="py-1">
         <List
-          tw={'flex-wrap flex-row pr-4 pl-1'}
+          tw={'flex-wrap flex-row pr-4 pl-2'}
           onScroll={scrollHandler}
           scrollEventThrottle={16}
           horizontal={true}
@@ -138,22 +159,33 @@ const SymptomSection = ({
           )}
           contentContainerStyle={{
             paddingVertical: 6,
-            paddingRight: 12,
+            paddingRight: 32,
             paddingLeft: 112,
           }}
           data={items}
         />
-        <ButtonContainer style={[{elevation: 6}, animatedStyle]}>
-          <Touchable activeOpacity={0.85}>
-            <Text style={textOpacity}>Add</Text>
-            <PlusIconContainer style={plusIconAnimatedStyle}>
-              <PlusIcon width={56} height={56} />
-            </PlusIconContainer>
-          </Touchable>
-        </ButtonContainer>
+        <DashedContainer style={[styles.dashed, animatedBorderRadiusStyle]}>
+          <ButtonContainer
+            style={[{elevation: 6}, animatedStyle, animatedBorderRadiusStyle]}>
+            <Touchable activeOpacity={0.85}>
+              <Text style={textOpacity}>Add</Text>
+              <PlusIconContainer style={plusIconAnimatedStyle}>
+                <PlusIcon width={56} height={56} />
+              </PlusIconContainer>
+            </Touchable>
+          </ButtonContainer>
+        </DashedContainer>
       </Flex>
     </Flex>
   );
 };
+
+const styles = StyleSheet.create({
+  dashed: {
+    borderStyle: 'dashed',
+    borderWidth: 1.5,
+    borderColor: '#30C2D0',
+  },
+});
 
 export default SymptomSection;

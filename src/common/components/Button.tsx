@@ -12,7 +12,7 @@ interface ButtonTagProps {
   onPress?: () => void;
 }
 
-const Touchable = styled(TouchableOpacity, 'rounded-xl bg-white ml-2');
+const Touchable = styled(TouchableOpacity, 'rounded-xl bg-white ml-5');
 
 const Container = styled(
   Animated.View,
