@@ -22,13 +22,8 @@
       "@features/*": ["src/features/*"],
       "@themes/*": ["src/themes/*"]
     },
-    "types": ["@types/jest"],
-    "typeRoots": ["./types"]
+    "typeRoots": ["node_modules/@types", "./types"]
   },
-  "include": [
-    "src/**/*.spec.ts",
-    "src/**/*.test.ts"
-  ],
   "exclude": [
     "__mocks__/**",
   ],
