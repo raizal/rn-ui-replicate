@@ -63,7 +63,7 @@ const ScrollPicker = (props: ScrollPickerProps) => {
   const momentumStarted = useSharedValue<boolean>(false);
   const isScrollTo = useSharedValue<boolean>(false);
   const dragStarted = useSharedValue<boolean>(false);
-  const timer = useSharedValue<NodeJS.Timeout | null>(null);
+  const timer = useSharedValue<number | null>(null);
 
   const scrollToIndex = (index: number, animated = true) => {
     setSelectedIndex(index);
