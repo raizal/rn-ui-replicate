@@ -1,6 +1,6 @@
 import React from 'react';
 import {BodyText, Flex} from '@src/common/components';
-import {StyleSheet, TouchableOpacity} from 'react-native';
+import {Platform, StyleSheet, TouchableOpacity} from 'react-native';
 import Animated, {
   Extrapolation,
   interpolate,
@@ -165,6 +165,7 @@ const SymptomSection = ({classNames}: SymptomSectionProps) => {
         />
         <DashedContainer style={[styles.dashed, animatedBorderRadiusStyle]}>
           <ButtonContainer
+            tw={clsx(Platform.OS === 'ios' && 'shadow-sm')}
             style={[{elevation: 6}, animatedStyle, animatedBorderRadiusStyle]}>
             <Touchable activeOpacity={0.85}>
               <Text style={textOpacity}>Add</Text>

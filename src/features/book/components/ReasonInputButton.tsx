@@ -1,5 +1,5 @@
 import React from 'react';
-import {TouchableOpacity} from 'react-native';
+import {Platform, TouchableOpacity} from 'react-native';
 import Search from '@icons/Search.svg';
 import Clock from '@icons/Clock.svg';
 import ChevronDown from '@icons/ChevronDown.svg';
@@ -16,14 +16,17 @@ const Container = styled(
 
 const ClickableArea = styled(
   TouchableOpacity,
-  'pl-4 items-center flex flex-row flex-1 rounded-2xl',
+  'pl-2 items-center flex flex-row flex-1 rounded-2xl',
 );
 
-const SearchIcon = styled(Search, 'fill-brand-primary-400 mr-3');
+const SearchIcon = styled(Search, 'fill-brand-primary-400 mr-2');
 const ClockIcon = styled(Clock, 'fill-white mr-2');
 const ChevronDownIcon = styled(ChevronDown, 'fill-white');
 
-const Text = styled(BodyText, 'flex-1 text-[16px] font-semibold mr-4');
+const Text = styled(
+  BodyText,
+  'flex-1 text-[14px] font-semibold text-neutral-600 mr-2',
+);
 
 const ButtonDatePicker = styled(TouchableOpacity, 'py-2 pr-4');
 const DatePickerContainer = styled(
@@ -58,7 +61,7 @@ const ReasonInputButton = ({
 
   return (
     <Container
-      tw={clsx(className)}
+      tw={clsx(className, Platform.OS === 'ios' && 'shadow-sm')}
       style={{
         elevation: 4,
       }}>

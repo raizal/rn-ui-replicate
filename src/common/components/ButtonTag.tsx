@@ -1,5 +1,5 @@
 import React from 'react';
-import {TouchableOpacity} from 'react-native';
+import {Platform, TouchableOpacity} from 'react-native';
 import {styled} from 'nativewind';
 import Animated, {ZoomOutEasyUp, ZoomInEasyUp} from 'react-native-reanimated';
 import {BodyText} from '@components/index';
@@ -34,7 +34,10 @@ const ButtonTag = ({text, active, onPress}: ButtonTagProps) => {
       <Container
         exiting={ZoomOutEasyUp.duration(300)}
         entering={ZoomInEasyUp.duration(300).delay(300).randomDelay()}
-        tw={clsx(active && 'bg-brand-primary-400 border-0')}
+        tw={clsx(
+          active && 'bg-brand-primary-400 border-0',
+          Platform.OS === 'ios' && 'shadow-sm',
+        )}
         style={{
           elevation: 6,
         }}>

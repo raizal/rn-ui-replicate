@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Pressable} from 'react-native';
+import {Platform, Pressable} from 'react-native';
 import {H2} from '@components/index';
 import {styled} from 'nativewind';
 import clsx from 'clsx';
@@ -51,6 +51,7 @@ const HeaderSwitch = () => {
 
   return (
     <Container
+      tw={clsx(Platform.OS === 'ios' && 'shadow-sm')}
       exiting={ZoomOutEasyUp.duration(100)}
       entering={ZoomInEasyUp.duration(100)}
       style={{
