@@ -32,7 +32,7 @@ const ButtonContainer = styled(
 const List = styled(Animated.FlatList<string>);
 const Text = styled(
   Animated.Text,
-  'text-[18px] leading-5 text-neutral-500 font-medium text-center',
+  'text-[18px] leading-5 text-neutral-500 text-center',
 );
 
 const PlusIconContainer = styled(

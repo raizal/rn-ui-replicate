@@ -21,7 +21,7 @@ const Container = styled(
 
 const Text = styled(
   BodyText,
-  'text-[18px] leading-5 text-neutral-500 font-medium text-center',
+  'text-[18px] leading-5 text-neutral-500 text-center',
 );
 
 const ButtonTag = ({text, active, onPress}: ButtonTagProps) => {

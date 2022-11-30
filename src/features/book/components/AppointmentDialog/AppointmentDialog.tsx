@@ -115,7 +115,7 @@ const AppointmentDialog = React.forwardRef<BottomSheet, AppointmentDialogProps>(
         <Flex>
           <BodyText
             tw={clsx(
-              'text-[16px] font-bold text-center leading-6 text-neutral-400',
+              'text-[16px] text-center leading-6 text-neutral-400',
               isSelected && 'text-brand-primary-400',
             )}>
             {data}

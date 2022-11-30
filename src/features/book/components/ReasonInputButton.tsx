@@ -32,7 +32,7 @@ const DatePickerContainer = styled(
 );
 const DatePickerText = styled(
   BodyText,
-  'text-[14px] font-semibold text-neutral-100 tracking-wider leading-4',
+  'text-[14px] text-neutral-100 tracking-wider leading-4',
 );
 
 interface ReasonInputButtonProps {
@@ -78,5 +78,4 @@ const ReasonInputButton = ({
     </Container>
   );
 };
-
 export default ReasonInputButton;
