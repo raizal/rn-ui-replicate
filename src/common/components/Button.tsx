@@ -1,5 +1,5 @@
 import React from 'react';
-import {TouchableOpacity} from 'react-native';
+import {Platform, TouchableOpacity} from 'react-native';
 import {styled} from 'nativewind';
 import Animated, {ZoomOutEasyUp} from 'react-native-reanimated';
 import {BodyText} from '@src/common/components';
@@ -29,6 +29,7 @@ const ButtonTag = ({text, active, onPress}: ButtonTagProps) => {
     <Touchable
       onPress={onPress}
       activeOpacity={0.9}
+      tw={clsx(Platform.OS === 'ios' && 'shadow-sm')}
       style={{
         elevation: 6,
       }}>
